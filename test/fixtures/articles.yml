@@ -2,8 +2,8 @@
 
 one:
   title: MyString
-  body: MyText
+  body: "My body text is 10 Words long"
 
 two:
   title: MyString
-  body: MyText
+  body: "My body text is 10 Words long"
