@@ -12,6 +12,7 @@
 
 <h2>Comments</h2>
 <% @article.comments.each do |comment| %>
+  <% next unless comment.persisted? %>
   <p>
     <strong>Commenter:</strong>
     <%= comment.commenter %>
@@ -24,7 +25,7 @@
 <% end %>
 
 <h2>Add a comment:</h2>
-<%= form_with model: [ @article, @article.comments.build ] do |form| %>
+<%= form_with model: [ @article, @comment] do |form| %>
   <p>
     <%= form.label :commenter %><br>
     <%= form.text_field :commenter %>
@@ -33,6 +34,10 @@
     <%= form.label :body %><br>
     <%= form.text_area :body %>
   </p>
+  <% @comment.errors.full_messages.each do |message| %>
+  <p><%= message %></p>
+<% end %>
+
   <p>
     <%= form.submit %>
   </p>
