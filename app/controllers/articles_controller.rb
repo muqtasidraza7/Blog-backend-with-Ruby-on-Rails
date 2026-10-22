@@ -5,6 +5,10 @@ class ArticlesController < ApplicationController
 
   def show
     @article = Article.find(params[:id])
+    @comment = @article.comments.build(
+      commenter:session[:commenter_name]
+    )
+    @show_comments = cookies[:show_comments] != "false"
   end
 
   def new
@@ -40,6 +44,18 @@ class ArticlesController < ApplicationController
     @article.destroy
 
     redirect_to root_path, status: :see_other
+  end
+
+  def comment_visibility
+    @article=Article.find(params[:id])
+    cookies[:show_comments]={
+      value: params[:show_comments] == "false" ? "false": "true",
+      expires: 30.day.from_now,
+      httponly: true,
+      same_site: :lax
+    }
+
+    redirect_to article_path(@article), status: :see_other
   end
 
   private
