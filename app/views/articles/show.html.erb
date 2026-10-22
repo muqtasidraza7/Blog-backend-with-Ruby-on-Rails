@@ -11,17 +11,28 @@
 </ul>
 
 <h2>Comments</h2>
-<% @article.comments.each do |comment| %>
-  <% next unless comment.persisted? %>
-  <p>
-    <strong>Commenter:</strong>
-    <%= comment.commenter %>
-  </p>
 
-  <p>
-    <strong>Comment:</strong>
-    <%= comment.body %>
-  </p>
+<%= button_to(
+  @show_comments ? "Hide comments" : "Show comments",
+  comment_visibility_article_path(@article),
+  method: :patch,
+  params: { show_comments: @show_comments ? "false" : "true" }
+) %>
+
+<% if @show_comments %>
+  <% @article.comments.each do |comment| %>
+    <% next unless comment.persisted? %>
+
+    <p>
+      <strong>Commenter:</strong>
+      <%= comment.commenter %>
+    </p>
+
+    <p>
+      <strong>Comment:</strong>
+      <%= comment.body %>
+    </p>
+  <% end %>
 <% end %>
 
 <h2>Add a comment:</h2>

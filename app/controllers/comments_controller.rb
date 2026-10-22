@@ -4,8 +4,10 @@ class CommentsController < ApplicationController
     @comment = @article.comments.build(comment_params)
 
     if @comment.save
+      session[:commenter_name] = @comment.commenter
       redirect_to article_path(@article)
     else
+      @show_comments = cookies[:show_comments] != "false"
       render "articles/show", status: :unprocessable_entity
     end
   end
