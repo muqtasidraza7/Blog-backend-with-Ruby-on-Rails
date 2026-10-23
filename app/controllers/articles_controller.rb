@@ -1,4 +1,11 @@
 class ArticlesController < ApplicationController
+  allow_unauthenticated_access only: %i[
+    index
+    show
+    comment_visibility
+  ]
+  before_action :set_owned_article, only: %i[edit update destroy]
+
   def index
     @articles = Article.all
   end
@@ -6,17 +13,17 @@ class ArticlesController < ApplicationController
   def show
     @article = Article.find(params[:id])
     @comment = @article.comments.build(
-      commenter:session[:commenter_name]
+      commenter: session[:commenter_name]
     )
     @show_comments = cookies[:show_comments] != "false"
   end
 
   def new
-    @article = Article.new
+    @article = Current.user.articles.build
   end
 
   def create
-    @article = Article.new(article_params)
+    @article = Current.user.articles.build(article_params)
 
     if @article.save
       redirect_to @article
@@ -26,12 +33,9 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @article = Article.find(params[:id])
   end
 
   def update
-    @article = Article.find(params[:id])
-
     if @article.update(article_params)
       redirect_to @article
     else
@@ -40,17 +44,16 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    @article = Article.find(params[:id])
-    @article.destroy
+    @article.destroy!
 
     redirect_to root_path, status: :see_other
   end
 
   def comment_visibility
-    @article=Article.find(params[:id])
-    cookies[:show_comments]={
-      value: params[:show_comments] == "false" ? "false": "true",
-      expires: 30.day.from_now,
+    @article = Article.find(params[:id])
+    cookies[:show_comments] = {
+      value: params[:show_comments] == "false" ? "false" : "true",
+      expires: 30.days.from_now,
       httponly: true,
       same_site: :lax
     }
@@ -59,6 +62,10 @@ class ArticlesController < ApplicationController
   end
 
   private
+    def set_owned_article
+      @article = Current.user.articles.find(params[:id])
+    end
+
     def article_params
       params.require(:article).permit(:title, :body)
     end
