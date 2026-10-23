@@ -24,6 +24,25 @@
   </head>
 
   <body>
+    <nav>
+  <%= link_to "Articles", articles_path %>
+
+  <% if authenticated? %>
+    <span>Signed in as <%= Current.user.email_address %></span>
+
+    <%= button_to "Sign out", session_path, method: :delete %>
+  <% else %>
+    <%= link_to "Sign in", new_session_path %>
+  <% end %>
+</nav>
+
+<% if notice.present? %>
+  <p role="status"><%= notice %></p>
+<% end %>
+
+<% if alert.present? %>
+  <p role="alert"><%= alert %></p>
+<% end %>
     <%= yield %>
   </body>
 </html>

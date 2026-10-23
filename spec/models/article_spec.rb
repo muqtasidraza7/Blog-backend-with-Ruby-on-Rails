@@ -60,18 +60,18 @@ RSpec.describe Article, type: :model do
   end
   describe "destroying an article" do
     it "destroys its comments and keep comments of other articels" do
-      article = create(:article,title:"Article to delete", body:"This article should be deleted")
-  other_article = create(:article,title:"Article to Keep", body:"This article should remain")
+      article = create(:article, title: "Article to delete", body: "This article should be deleted")
+  other_article = create(:article, title: "Article to Keep", body: "This article should remain")
 
     first_comment = create(:comment,
     article: article,
-    body:"First Comment"
+    body: "First Comment"
     )
 
-    second_comment = create(:comment, 
+    second_comment = create(:comment,
     article: article,
-    commenter:"Sara",
-    body:"Second Comment")
+    commenter: "Sara",
+    body: "Second Comment")
     other_comment = create(
       :comment,
       article: other_article,

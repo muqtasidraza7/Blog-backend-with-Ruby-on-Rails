@@ -1,7 +1,8 @@
 <h1><%= @article.title %></h1>
-
+<p>Published on <%= publication_date(@article) %></p>
 <p><%= @article.body %></p>
 
+<% if authenticated? && @article.user_id == Current.user.id %>
 <ul>
   <li><%= link_to "Edit", edit_article_path(@article) %></li>
   <li><%= link_to "Destroy", article_path(@article), data: {
@@ -9,6 +10,7 @@
                     turbo_confirm: "Are you sure?"
                   } %></li>
 </ul>
+<% end %>
 
 <h2>Comments</h2>
 
